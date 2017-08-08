@@ -1,0 +1,7 @@
+node_modules
+jsconfig.json
+/public/*.png
+/public/*.js
+/public/*.js.map
+npm-debug.log
+/uploads/*
