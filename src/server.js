@@ -1,7 +1,8 @@
 const path = require('path')
       express = require('express')
       formidable = require('formidable'),
-      fs = require('fs')
+      fs = require('fs'),
+      images = require('images')
 
 
 module.exports = {
@@ -20,27 +21,21 @@ module.exports = {
       form.parse(req, function(err, fields, files) {
         let file = files.file
 
-        var old_path = file.path,
-            file_size = file.size,
-            file_ext = file.name.split('.').pop(),
-            index = old_path.lastIndexOf('/') + 1,
-            file_name = old_path.substr(index),
-            new_path = path.join(process.env.PWD, '/uploads/', file_name + '.' + file_ext);
-            console.log("new path: " + new_path)
+        let oldPath = file.path,
+            fileExt = file.name.split('.').pop(),
+            index = oldPath.lastIndexOf('/') + 1,
+            fileName = oldPath.substr(index),
+            newPath = path.join(process.env.PWD, '/uploads/', fileName + '.' + fileExt);
+            bevinPicPath = path.join(process.env.PWD, '/public/bevin_pics/', 'mask1.png')
 
-            fs.readFile(old_path, function(err, data) {
-              fs.writeFile(new_path, data, function(err) {
-                fs.unlink(old_path, function(err) {
-                  if (err) {
-                      res.status(500);
-                      res.json({'success': false});
-                  } else {
-                      res.status(200);
-                      res.redirect("/")
-                  }
-                });
-              });
-            });
+            bevinImage = images(bevinPicPath)
+            incomingImage = images(oldPath)
+            const heightDiff = incomingImage.height() - bevinImage.height()
+            const combinedPic = incomingImage.draw(bevinImage, 0, heightDiff)
+                         .encode("png")
+            res.status(200);
+            res.contentType('image/png');
+            res.end(combinedPic, 'binary')
       })
     })
 

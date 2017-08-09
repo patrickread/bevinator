@@ -11,7 +11,7 @@ export default class BevinImage extends React.Component {
     this.onDragLeave = this.onDragLeave.bind(this)
 
     this.state = {
-      imageUrl: "",
+      imageUrl: "/public/bevin_pics/mask1.png",
       dropzoneActive: false
     }
   }
@@ -24,6 +24,7 @@ export default class BevinImage extends React.Component {
 
     let formData = new FormData();
     formData.append('file', files[0]);
+    let _this = this
 
     fetch(`/upload-pic`, {
       credentials: 'same-origin',
@@ -35,10 +36,14 @@ export default class BevinImage extends React.Component {
     })
     .then(response => {
       if (response.ok) {
-        return Promise.resolve(response)
+        return response.blob()
       }
-    }).then(response => response.json()).then(json => {
-
+    }).then(function(blob) {
+      const imageSource = 'data:image/png;base64,' + btoa(blob)
+      const objectURL = URL.createObjectURL(blob);
+      _this.setState({
+        imageUrl: objectURL
+      })
     }).catch(e => {
 
     })
@@ -66,12 +71,10 @@ export default class BevinImage extends React.Component {
         onDrop={this.onDrop}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}>
+        <div className="image-background">
+          Add Bevin to any pic! Just click to upload a picture, or drag one into here. Suggested image height: 768px.
+        </div>
         <img src={this.state.imageUrl} />
       </Dropzone>;
-
-    // return <form action="/upload-pic" encType="multipart/form-data" method="post">
-    //       <input type="file" name="file" multiple="multiple" /><br />
-    //       <input type="submit" value="Upload" />
-    //     </form>
   }
 }
