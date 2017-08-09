@@ -1,4 +1,4 @@
-Bevin Selfie Generator
+Bevinator - a Bevin Selfie Generator
 ==================
 
 > TODO: Write this
@@ -6,4 +6,4 @@ Bevin Selfie Generator
 License
 -------
 
-[MIT](http://silasb.mit-license.org/)
+[MIT](http://mit-license.org/)
