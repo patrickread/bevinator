@@ -26,15 +26,20 @@ module.exports = {
             index = oldPath.lastIndexOf('/') + 1,
             fileName = oldPath.substr(index),
             newPath = path.join(process.env.PWD, '/uploads/', fileName + '.' + fileExt);
-            bevinPicPath = path.join(process.env.PWD, '/public/bevin_pics/', 'mask1.png')
 
+            bevinPicPath = path.join(process.env.PWD, '/public/bevin_pics/', 'mask1.png')
             bevinImage = images(bevinPicPath)
+
             incomingImage = images(oldPath)
-            const heightDiff = incomingImage.height() - bevinImage.height()
-            const combinedPic = incomingImage.draw(bevinImage, 0, heightDiff)
+            const ratio = bevinImage.height() / incomingImage.height()
+            const newWidth = incomingImage.width() * ratio
+            const combinedPic = incomingImage
+                         .resize(newWidth, bevinImage.height(), null)
+                         .draw(bevinImage, 0, 0)
                          .encode("png")
             res.status(200);
             res.contentType('image/png');
+            res.set('Image-Width', newWidth)
             res.end(combinedPic, 'binary')
       })
     })
