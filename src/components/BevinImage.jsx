@@ -15,14 +15,15 @@ export default class BevinImage extends React.Component {
       imageWidth: "100%",
       imageUrl: "/public/bevin_pics/mask1.png",
       dropzoneActive: false,
-      imageDownloaded: false
+      imageDownloaded: false,
+      loading: false
     }
   }
 
   onDrop(files) {
     this.setState({
       dropzoneActive: false,
-      progress: true
+      loading: true
     })
 
     let formData = new FormData();
@@ -49,7 +50,8 @@ export default class BevinImage extends React.Component {
       const objectURL = URL.createObjectURL(blob);
       _this.setState({
         imageUrl: objectURL,
-        imageDownloaded: true
+        imageDownloaded: true,
+        loading: false
       })
 
       ReactGA.set({ page: "generated-selfie" });
@@ -71,7 +73,7 @@ export default class BevinImage extends React.Component {
   }
 
   render() {
-    const { imageUrl, imageWidth, imageDownloaded } = this.state
+    const { imageUrl, imageWidth, imageDownloaded, loading } = this.state
     const dropzoneClasses = classNames('react-dropzone', {
       boldOutline: this.state.dropzoneActive
     })
@@ -90,13 +92,18 @@ export default class BevinImage extends React.Component {
       }
     }
 
+    let instructions = "Add Bevin to any pic! Just click to upload a picture, or drag one into here."
+    if (loading) {
+      instructions = "Adding Bevin into your photo. Hold up a sec..."
+    }
+
     return <Dropzone
         className={dropzoneClasses}
         onDrop={this.onDrop}
         onDragEnter={this.onDragEnter}
         onDragLeave={this.onDragLeave}>
         <div className="image-background" style={(imageDownloaded) ? {display: "none"} : {}}>
-          Add Bevin to any pic! Just click to upload a picture, or drag one into here. Suggested image height: 768px.
+          {instructions}
         </div>
         <img src={imageUrl} style={imageStyle} />
       </Dropzone>;
