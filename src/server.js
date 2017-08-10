@@ -27,7 +27,9 @@ module.exports = {
             fileName = oldPath.substr(index),
             newPath = path.join(process.env.PWD, '/uploads/', fileName + '.' + fileExt);
 
-            bevinPicPath = path.join(process.env.PWD, '/public/bevin_pics/', 'mask1.png')
+            const maskMax = 2
+            const maskIndex = Math.floor(Math.random() * maskMax) + 1
+            bevinPicPath = path.join(process.env.PWD, '/public/bevin_pics/', 'mask' + maskIndex + '.png')
             bevinImage = images(bevinPicPath)
 
             incomingImage = images(oldPath)
